@@ -1,7 +1,7 @@
 {
   "name": "@rappopo/dab-memory",
   "version": "0.0.1",
-  "description": "An In- memory DAL that sucks!",
+  "description": "An in-memory data access layer that sucks!",
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit"
@@ -12,11 +12,13 @@
     "memory",
     "in-memory",
     "data",
-    "access"
+    "access",
+    "dal"
   ],
   "author": "Ardhi Lukianto <ardhi@lukianto.com>",
   "license": "MIT",
   "dependencies": {
+    "@rappopo/dab": "0.0.1",
     "lodash-query": "^1.4.2",
     "uuid": "^3.1.0"
   },
