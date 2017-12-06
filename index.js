@@ -122,6 +122,135 @@ class DabMemory extends Dab {
     })
   }
 
+  bulkCreate (body, params) {
+    [params] = this.sanitize(params)
+    return new Promise((resolve, reject) => {
+      if (!this._.isArray(body))
+        return reject(new Error('Require array'))
+      let good = [], result = []
+      this._.each(body, (b,i) => {
+        let org = this._.cloneDeep(b)
+        [b] = this.delFakeGetReal(b)
+        if (!this._.has(b, this.options.idSrc))
+          b[this.options.idSrc] = uuid()
+        let kv = {}, res = {}
+        kv[this.options.idSrc] = b[this.options.idSrc]
+        res[this.options.idDest] = b[this.options.idSrc]
+        if (this._.findIndex(this.data, kv) === -1) {
+          good.push(b)
+          res.success = true
+        } else {
+          res.success = false
+          res.reason = 'Exists'
+        }
+        result.push(res)
+      })
+
+      this.data.push.apply(this.data, good)
+      resolve({
+        success: true,
+        stat: {
+          ok: good.length,
+          fail: body.length - good.length,
+          total: body.length
+        },
+        data: result
+      })
+    })
+  }
+
+  _getGood (body, inverted = false) {
+    let good = [], status = []
+    this._.each(body, (b,i) => {
+      [b] = this.delFakeGetReal(b)
+      let kv = {}, stat = {}
+      if (!this._.has(b, this.options.idSrc))
+        b[this.options.idSrc] = uuid()
+      kv[this.options.idSrc] = b[this.options.idSrc]
+      stat[this.options.idDest] = b[this.options.idSrc]
+      const idx = this._.findIndex(this.data, kv),
+        op = (inverted && idx === -1) || (!inverted && idx > -1)
+      if (op)
+        good.push({ idx: idx, data: b })
+      stat.success = op
+      if (!stat.success)
+        stat.reason = inverted ? 'Exists' : 'Not found'
+      status.push(stat)
+    })
+    return [good, status]    
+  }
+
+  bulkCreate (body, params) {
+    [params] = this.sanitize(params)
+    return new Promise((resolve, reject) => {
+      if (!this._.isArray(body))
+        return reject(new Error('Require array'))
+      const [good, status] = this._getGood(body, true),
+        stuff = this._.map(good, g => g.data)
+
+      this.data.push.apply(this.data, stuff)
+
+      resolve({
+        success: true,
+        stat: {
+          ok: good.length,
+          fail: body.length - good.length,
+          total: body.length
+        },
+        data: status
+      })
+    })
+  }
+
+  bulkUpdate (body, params) {
+    [params] = this.sanitize(params)
+    return new Promise((resolve, reject) => {
+      if (!this._.isArray(body))
+        return reject(new Error('Require array'))
+      const [good, status] = this._getGood(body)
+
+      this._.each(good, g => {
+        this.data[g.idx] = g.data
+      })
+
+      resolve({
+        success: true,
+        stat: {
+          ok: good.length,
+          fail: body.length - good.length,
+          total: body.length
+        },
+        data: status
+      })
+    })
+  }
+
+  bulkRemove (body, params) {
+    [params] = this.sanitize(params)
+    return new Promise((resolve, reject) => {
+      if (!this._.isArray(body))
+        return reject(new Error('Require array'))
+      const [good, status] = this._getGood(body)
+      const ids = this._.map(good, g => {
+        return g.data[this.options.idSrc]
+      })
+
+      this._.remove(this.data, d => {
+        return ids.indexOf(d[this.options.idSrc]) > -1
+      })
+
+      resolve({
+        success: true,
+        stat: {
+          ok: good.length,
+          fail: body.length - good.length,
+          total: body.length
+        },
+        data: status
+      })
+    })
+  }
+
 }
 
 module.exports = DabMemory

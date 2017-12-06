@@ -1,6 +1,6 @@
 {
   "name": "@rappopo/dab-memory",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An in-memory data access layer that sucks!",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "author": "Ardhi Lukianto <ardhi@lukianto.com>",
   "license": "MIT",
   "dependencies": {
-    "@rappopo/dab": "0.0.1",
+    "@rappopo/dab": "0.0.2",
     "lodash-query": "^1.4.2",
     "uuid": "^3.1.0"
   },
