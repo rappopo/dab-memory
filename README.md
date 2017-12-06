@@ -1,5 +1,40 @@
 # @rappopo/dab-memory
 
+A [Rappopo DAB](https://github.com/rappopo/dab) implementation for in-memory datastore, powered by [Lodash](https://lodash.com/) and [lodash-query](https://github.com/kenansulayman/lodash-query).
+
+## Installation
+
+Simply invoke this command in your project folder:
+
+	$ npm install --save @rappopo/dab-memory
+
+And within your script:
+
+	const DabMemory = require('@rappopo/dab-memory')
+	const dab = new DabMemory({
+		data: [
+			....
+		]
+	})
+	...
+	dab.findOne('my-doc').then(function(doc) { ... })
+
+## Options
+
+`data`: your in-memory data as array of objects, with **id** as the primary key. Defaults to empty array. Example:
+
+    data: [
+      { id: 'jack-bauer', name: 'Jack Bauer' },
+      { id: 'james-bond', name: 'James Bond' }
+    ]
+
+
+## Misc
+
+* [Methods](https://github.com/rappopo/dab)
+* [ChangeLog](CHANGELOG.md)
+* Donation: Bitcoin **16HVCkdaNMvw3YdBYGHbtt3K5bmpRmH74Y**
+
 ## License
 
 (The MIT License)
