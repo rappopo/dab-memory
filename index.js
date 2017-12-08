@@ -141,7 +141,7 @@ class DabMemory extends Dab {
           res.success = true
         } else {
           res.success = false
-          res.reason = 'Exists'
+          res.message = 'Exists'
         }
         result.push(res)
       })
@@ -174,7 +174,7 @@ class DabMemory extends Dab {
         good.push({ idx: idx, data: b })
       stat.success = op
       if (!stat.success)
-        stat.reason = inverted ? 'Exists' : 'Not found'
+        stat.message = inverted ? 'Exists' : 'Not found'
       status.push(stat)
     })
     return [good, status]    
@@ -230,6 +230,12 @@ class DabMemory extends Dab {
     return new Promise((resolve, reject) => {
       if (!this._.isArray(body))
         return reject(new Error('Require array'))
+      this._.each(body, (b, i) => {
+        let kv = {}
+        kv[this.options.idSrc] = b 
+        body[i] = kv
+      })
+
       const [good, status] = this._getGood(body)
       const ids = this._.map(good, g => {
         return g.data[this.options.idSrc]
