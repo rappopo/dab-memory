@@ -189,16 +189,17 @@ class DabMemory extends Dab {
         stuff = this._.map(good, g => g.data)
 
       this.data.push.apply(this.data, stuff)
-
-      resolve({
+      let result = {
         success: true,
         stat: {
           ok: good.length,
           fail: body.length - good.length,
           total: body.length
-        },
-        data: status
-      })
+        }
+      }
+      if (params.withDetail)
+        result.detail = status
+      resolve(result)
     })
   }
 
@@ -212,16 +213,17 @@ class DabMemory extends Dab {
       this._.each(good, g => {
         this.data[g.idx] = g.data
       })
-
-      resolve({
+      let result = {
         success: true,
         stat: {
           ok: good.length,
           fail: body.length - good.length,
           total: body.length
-        },
-        data: status
-      })
+        }
+      }
+      if (params.withDetail)
+        result.detail = status
+      resolve(result)
     })
   }
 
@@ -244,16 +246,17 @@ class DabMemory extends Dab {
       this._.remove(this.data, d => {
         return ids.indexOf(d[this.options.idSrc]) > -1
       })
-
-      resolve({
+      let result = {
         success: true,
         stat: {
           ok: good.length,
           fail: body.length - good.length,
           total: body.length
-        },
-        data: status
-      })
+        }
+      }
+      if (params.withDetail)
+        result.detail = status
+      resolve(result)
     })
   }
 

@@ -11,7 +11,7 @@ chai.use(chaiAsPromised)
 const Cls = require('../index'),
   lib = require('./_lib')
 
-describe('bulkRemove', function () {
+describe('bulkUpdate', function () {
   it('should return error if body isn\'t an array', function () {
     const cls = new Cls(lib.options)
     return expect(cls.bulkCreate({ name: 'Rambo' })).to.be.rejectedWith('Require array')
@@ -19,13 +19,15 @@ describe('bulkRemove', function () {
 
   it('should return the correct bulk status', function() {
     const cls = new Cls(lib.options)
-    let p = cls.bulkRemove(lib._.map(lib.bulkDocs, 'id'))
+    let docs = lib._.cloneDeep(lib.bulkDocs)
+    docs[0].name = 'Jackie Bauer'
+    let p = cls.bulkUpdate(docs, { withDetail: true })
     return Promise.all([
       expect(p).to.eventually.have.property('stat').that.have.property('ok').equal(1),
       expect(p).to.eventually.have.property('stat').that.have.property('fail').equal(2),
       expect(p).to.eventually.have.property('stat').that.have.property('total').equal(3),
-      expect(p).to.eventually.have.property('data').that.containSubset([{ id: 'jack-bauer', success: true }]),
-      expect(p).to.eventually.have.property('data').that.containSubset([{ id: 'johnny-english', message: 'Not found' }])
+      expect(p).to.eventually.have.property('detail').that.containSubset([{ id: 'jack-bauer', success: true }]),
+      expect(p).to.eventually.have.property('detail').that.containSubset([{ id: 'johnny-english', message: 'Not found' }])
     ])
   })
 
