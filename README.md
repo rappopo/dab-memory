@@ -51,7 +51,6 @@ data: [
 
 ## Misc
 
-* [@rappopo/dab](https://github.com/rappopo/dab)
 * [ChangeLog](CHANGELOG.md)
 * Donation: Bitcoin **16HVCkdaNMvw3YdBYGHbtt3K5bmpRmH74Y**
 
