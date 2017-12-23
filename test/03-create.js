@@ -9,7 +9,7 @@ chai.use(chaiAsPromised)
 const Cls = require('../index'),
   lib = require('./_lib'),
   body = {
-    id: 'jason-bourne',
+    _id: 'jason-bourne',
     name: 'Jason Bourne'
   }
 

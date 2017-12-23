@@ -24,10 +24,10 @@ describe('copyTo', function () {
       }).asCallback((err, result) => {
         expect(result).to.have.property('detail').that.have.lengthOf(7)
         lib._.each(lib.options.data, doc => {
-          expect(result).to.have.property('detail').that.containSubset([lib._(doc).pick('id').merge({ success: false, message: 'Exists' }).value()])
+          expect(result).to.have.property('detail').that.containSubset([lib._(doc).pick('_id').merge({ success: false, message: 'Exists' }).value()])
         })
         lib._.each(inOut, doc => {
-          expect(result).to.have.property('detail').that.containSubset([lib._(doc).pick('id').merge({ success: true }).value()])
+          expect(result).to.have.property('detail').that.containSubset([lib._(doc).pick('_id').merge({ success: true }).value()])
         })
         done()
       })

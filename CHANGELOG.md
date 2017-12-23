@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.8
+
+* Updated to @rappopo/dab@0.0.7
+* Removing idSrc & idDest in favor of schema mask provided by @rappopo/dab
+* Use `_id` instead of `id`
+
 ## 0.0.7
 
 * withDetail params in all bulk methods

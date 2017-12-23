@@ -24,8 +24,8 @@ describe('bulkCreate', function () {
       expect(p).to.eventually.have.property('stat').that.have.property('ok').equal(2),
       expect(p).to.eventually.have.property('stat').that.have.property('fail').equal(1),
       expect(p).to.eventually.have.property('stat').that.have.property('total').equal(3),
-      expect(p).to.eventually.have.property('detail').that.containSubset([{ id: 'jack-bauer', message: 'Exists', success: false }]),
-      expect(p).to.eventually.have.property('detail').that.containSubset([{ id: 'johnny-english', success: true }])
+      expect(p).to.eventually.have.property('detail').that.containSubset([{ _id: 'jack-bauer', message: 'Exists', success: false }]),
+      expect(p).to.eventually.have.property('detail').that.containSubset([{ _id: 'johnny-english', success: true }])
     ])
   })
 

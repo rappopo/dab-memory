@@ -27,8 +27,4 @@ describe('findOne', function () {
     return expect(cls.findOne('james-bond', { withIndex: true })).to.eventually.have.property('index').that.equal(1)
   })
 
-  it('should return doc with custom id key', function () {
-    const cls = new Cls(_.merge(_.cloneDeep(lib.options), { idDest: 'uid' }))
-    return expect(cls.findOne('james-bond')).to.eventually.have.property('data').that.include({ uid: 'james-bond' })
-  })
 })

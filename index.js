@@ -9,11 +9,9 @@ class DabMemory extends Dab {
     require('lodash-query')(this._)
   }
 
-  setOptions (options = {}) {
-    super.setOptions(this._.merge(this.options, {
-      idSrc: options.idSrc || 'id',
-      idDest: options.idDest || options.idSrc || 'id'
-    }))
+  setOptions (options) {
+    options = options || {}
+    super.setOptions(this._.merge(this.options, {}))
     this.data = this._.cloneDeep(options.data) || []
   }
 
@@ -40,9 +38,7 @@ class DabMemory extends Dab {
   }
 
   _findOne (id) {
-    let kv = {}
-    kv[this.options.idSrc] = id
-    let idx = this._.findIndex(this.data, kv),
+    let idx = this._.findIndex(this.data, { _id: id }),
       result = {
         success: idx > -1
       }
@@ -71,9 +67,9 @@ class DabMemory extends Dab {
   create (body, params) {
     [params, body] = this.sanitize(params, body)
     return new Promise((resolve, reject) => {
-      const id = body[this.options.idSrc] || uuid()
-      if (!body[this.options.idSrc])
-        body[this.options.idSrc] = id
+      const id = body._id || uuid()
+      if (!body._id)
+        body._id = id
       let result = this._findOne(id)
       if (result.success)
         return reject(new Error('Exists'))
@@ -89,14 +85,12 @@ class DabMemory extends Dab {
 
   update (id, body, params) {
     [params, body] = this.sanitize(params, body)
-    body = this._.omit(body, [this.options.idSrc])
+    body = this._.omit(body, ['_id'])
     return new Promise((resolve, reject) => {
       let result = this._findOne(id)
       if (!result.success)
         return reject(result.err)
-      let kv = {}
-      kv[this.options.idSrc] = id
-      let newBody = params.fullReplace ? this._.merge(body, kv) : this._.merge(result.data, body)
+      let newBody = params.fullReplace ? this._.merge(body, { _id: id }) : this._.merge(result.data, body)
       this.data[result.index] = newBody
       let data = {
         success: true,
@@ -130,13 +124,10 @@ class DabMemory extends Dab {
       let good = [], result = []
       this._.each(body, (b,i) => {
         let org = this._.cloneDeep(b)
-        [b] = this.delFakeGetReal(b)
-        if (!this._.has(b, this.options.idSrc))
-          b[this.options.idSrc] = uuid()
-        let kv = {}, res = {}
-        kv[this.options.idSrc] = b[this.options.idSrc]
-        res[this.options.idDest] = b[this.options.idSrc]
-        if (this._.findIndex(this.data, kv) === -1) {
+        if (!this._.has(b, '_id'))
+          b._id = uuid()
+        let res = { _id: b._id }
+        if (this._.findIndex(this.data, { _id: b._id }) === -1) {
           good.push(b)
           res.success = true
         } else {
@@ -162,13 +153,10 @@ class DabMemory extends Dab {
   _getGood (body, inverted = false) {
     let good = [], status = []
     this._.each(body, (b,i) => {
-      [b] = this.delFakeGetReal(b)
-      let kv = {}, stat = {}
-      if (!this._.has(b, this.options.idSrc))
-        b[this.options.idSrc] = uuid()
-      kv[this.options.idSrc] = b[this.options.idSrc]
-      stat[this.options.idDest] = b[this.options.idSrc]
-      const idx = this._.findIndex(this.data, kv),
+      if (!this._.has(b, '_id'))
+        b._id = uuid()
+      let stat = { _id: b._id }
+      const idx = this._.findIndex(this.data, { _id: b._id }),
         op = (inverted && idx === -1) || (!inverted && idx > -1)
       if (op)
         good.push({ idx: idx, data: b })
@@ -233,18 +221,16 @@ class DabMemory extends Dab {
       if (!this._.isArray(body))
         return reject(new Error('Require array'))
       this._.each(body, (b, i) => {
-        let kv = {}
-        kv[this.options.idSrc] = b 
-        body[i] = kv
+        body[i] = { _id: b }
       })
 
       const [good, status] = this._getGood(body)
       const ids = this._.map(good, g => {
-        return g.data[this.options.idSrc]
+        return g.data._id
       })
 
       this._.remove(this.data, d => {
-        return ids.indexOf(d[this.options.idSrc]) > -1
+        return ids.indexOf(d._id) > -1
       })
       let result = {
         success: true,

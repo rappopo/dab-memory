@@ -26,8 +26,8 @@ describe('bulkUpdate', function () {
       expect(p).to.eventually.have.property('stat').that.have.property('ok').equal(1),
       expect(p).to.eventually.have.property('stat').that.have.property('fail').equal(2),
       expect(p).to.eventually.have.property('stat').that.have.property('total').equal(3),
-      expect(p).to.eventually.have.property('detail').that.containSubset([{ id: 'jack-bauer', success: true }]),
-      expect(p).to.eventually.have.property('detail').that.containSubset([{ id: 'johnny-english', message: 'Not found' }])
+      expect(p).to.eventually.have.property('detail').that.containSubset([{ _id: 'jack-bauer', success: true }]),
+      expect(p).to.eventually.have.property('detail').that.containSubset([{ _id: 'johnny-english', message: 'Not found' }])
     ])
   })
 
