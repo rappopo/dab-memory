@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.11
+
+* Updated to @rappopo/dab@0.0.12
+* Enforcing namespace either through options or params
+
 ## 0.0.10
 
 * Updated to @rappopo/dab@0.0.11

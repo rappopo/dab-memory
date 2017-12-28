@@ -11,8 +11,20 @@ class DabMemory extends Dab {
 
   setOptions (options) {
     options = options || {}
-    super.setOptions(this._.merge(this.options, {}))
-    this.data = this._.cloneDeep(options.data) || []
+    super.setOptions(this._.merge(this.options, { ns: options.ns }))
+    this.data = {
+      default: []
+    }
+
+    this.data[this.options.ns] = this._.cloneDeep(options.data) || []
+  }
+
+  sanitize (params, body) {
+    [params, body] = super.sanitize(params, body)
+    params.ns = params.ns || this.options.ns
+    if (!this.data[params.ns])
+      this.data[params.ns] = []
+    return [params, body]
   }
 
   find (params) {
@@ -22,7 +34,7 @@ class DabMemory extends Dab {
       skip = ((params.page || 1) - 1) * limit,
       sort = params.sort
     return new Promise((resolve, reject) => {
-      let result = this._.query(this.data, query),
+      let result = this._.query(this.data[params.ns], query),
         keys = this._.keys(sort),
         dirs = this._.values(sort)
       if (!(this._.isEmpty(keys) || this._.isEmpty(dirs)))
@@ -37,14 +49,14 @@ class DabMemory extends Dab {
     })
   }
 
-  _findOne (id) {
-    let idx = this._.findIndex(this.data, { _id: id }),
+  _findOne (id, ns) {
+    let idx = this._.findIndex(this.data[ns], { _id: id }),
       result = {
         success: idx > -1
       }
     if (idx > -1) {
       result.index = idx,
-      result.data = this.data[idx]
+      result.data = this.data[ns][idx]
     } else {
       result.err = new Error('Not found')
     }
@@ -54,7 +66,7 @@ class DabMemory extends Dab {
   findOne (id, params) {
     [params] = this.sanitize(params)
     return new Promise((resolve, reject) => {
-      let result = this._findOne(id)
+      let result = this._findOne(id, params.ns)
       if (!result.success) 
         return reject(result.err)
       result.data = this.convertDoc(result.data)
@@ -70,15 +82,15 @@ class DabMemory extends Dab {
       const id = body._id || uuid()
       if (!body._id)
         body._id = id
-      let result = this._findOne(id)
+      let result = this._findOne(id, params.ns)
       if (result.success)
         return reject(new Error('Exists'))
-      this.data.push(body)
+      this.data[params.ns].push(body)
       let data = {
         success: true,
         data: this.convertDoc(body)
       }
-      if (params.withIndex) data.index = this.data.length - 1
+      if (params.withIndex) data.index = this.data[params.ns].length - 1
       resolve(data)
     })
   }
@@ -87,11 +99,11 @@ class DabMemory extends Dab {
     [params, body] = this.sanitize(params, body)
     body = this._.omit(body, ['_id'])
     return new Promise((resolve, reject) => {
-      let result = this._findOne(id)
+      let result = this._findOne(id, params.ns)
       if (!result.success)
         return reject(result.err)
       let newBody = params.fullReplace ? this._.merge(body, { _id: id }) : this._.merge(result.data, body)
-      this.data[result.index] = newBody
+      this.data[params.ns][result.index] = newBody
       let data = {
         success: true,
         data: this.convertDoc(newBody)
@@ -105,10 +117,10 @@ class DabMemory extends Dab {
   remove (id, params) {
     [params] = this.sanitize(params)
     return new Promise((resolve, reject) => {
-      let result = this._findOne(id)
+      let result = this._findOne(id, params.ns)
       if (!result.success)
         return reject(result.err)
-      let pulled = this._.pullAt(this.data, [result.index]),
+      let pulled = this._.pullAt(this.data[params.ns], [result.index]),
         data = params.withSource ? { success: true, source: this.convertDoc(pulled[0]) } : { success: true }
       if (params.withIndex)
         data.index = result.index
@@ -127,7 +139,7 @@ class DabMemory extends Dab {
         if (!this._.has(b, '_id'))
           b._id = uuid()
         let res = { _id: b._id }
-        if (this._.findIndex(this.data, { _id: b._id }) === -1) {
+        if (this._.findIndex(this.data[params.ns], { _id: b._id }) === -1) {
           good.push(b)
           res.success = true
         } else {
@@ -137,7 +149,7 @@ class DabMemory extends Dab {
         result.push(res)
       })
 
-      this.data.push.apply(this.data, good)
+      this.data[params.ns].push.apply(this.data[params.ns], good)
       resolve({
         success: true,
         stat: {
@@ -150,13 +162,13 @@ class DabMemory extends Dab {
     })
   }
 
-  _getGood (body, inverted = false) {
+  _getGood (body, inverted = false, ns) {
     let good = [], status = []
     this._.each(body, (b,i) => {
       if (!this._.has(b, '_id'))
         b._id = uuid()
       let stat = { _id: b._id }
-      const idx = this._.findIndex(this.data, { _id: b._id }),
+      const idx = this._.findIndex(this.data[ns], { _id: b._id }),
         op = (inverted && idx === -1) || (!inverted && idx > -1)
       if (op)
         good.push({ idx: idx, data: b })
@@ -173,10 +185,10 @@ class DabMemory extends Dab {
     return new Promise((resolve, reject) => {
       if (!this._.isArray(body))
         return reject(new Error('Require array'))
-      const [good, status] = this._getGood(body, true),
+      const [good, status] = this._getGood(body, true, params.ns),
         stuff = this._.map(good, g => g.data)
 
-      this.data.push.apply(this.data, stuff)
+      this.data[params.ns].push.apply(this.data[params.ns], stuff)
       let result = {
         success: true,
         stat: {
@@ -196,10 +208,10 @@ class DabMemory extends Dab {
     return new Promise((resolve, reject) => {
       if (!this._.isArray(body))
         return reject(new Error('Require array'))
-      const [good, status] = this._getGood(body)
+      const [good, status] = this._getGood(body, false, params.ns)
 
       this._.each(good, g => {
-        this.data[g.idx] = g.data
+        this.data[params.ns][g.idx] = g.data
       })
       let result = {
         success: true,
@@ -224,12 +236,12 @@ class DabMemory extends Dab {
         body[i] = { _id: b }
       })
 
-      const [good, status] = this._getGood(body)
+      const [good, status] = this._getGood(body, false, params.ns)
       const ids = this._.map(good, g => {
         return g.data._id
       })
 
-      this._.remove(this.data, d => {
+      this._.remove(this.data[params.ns], d => {
         return ids.indexOf(d._id) > -1
       })
       let result = {
