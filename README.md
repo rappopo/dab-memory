@@ -25,14 +25,16 @@ dab.findOne('my-doc').then(function(doc) { ... })
 
 ## Options
 
-`data`: your in-memory data as array of objects, with **id** as the primary key. Defaults to empty array. 
+`ns`: namespace to use. Optional, defaults to *default*.
+
+`data`: your in-memory data as array of objects, with **_id** as the primary key. Defaults to empty array. 
 
 Example:
 
 ```javascript
 data: [
-  { id: 'jack-bauer', name: 'Jack Bauer' },
-  { id: 'james-bond', name: 'James Bond' }
+  { _id: 'jack-bauer', name: 'Jack Bauer' },
+  { _id: 'james-bond', name: 'James Bond' }
 ]
 ```
 
