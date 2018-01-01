@@ -1,6 +1,6 @@
 {
   "name": "@rappopo/dab-memory",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An in-memory data access layer that sucks!",
   "main": "index.js",
   "scripts": {
