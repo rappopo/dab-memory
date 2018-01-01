@@ -142,7 +142,7 @@ class DabMemory extends Dab {
         data: this.convert(newBody, { collection: params.collection })
       }
       if (params.withIndex) data.index = result.index
-      if (params.withSource) data.source = this.convert(result.data, { collection: params })
+      if (params.withSource) data.source = this.convert(result.data, { collection: params.collection })
       resolve(data)
     })
   }

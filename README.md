@@ -20,9 +20,12 @@ dab.createCollection({ name: 'test' })
   .then(result => {
     return dab.bulkCreate(data, { collection: 'test' })
   })
-...
-// lets dab!
-dab.findOne('my-doc', 'test').then(function(doc) { ... })
+  .then(result => {
+    ...    
+    // lets dab!
+    dab.findOne('my-doc', 'test').then(function(doc) { ... })
+    ...
+  })
 ```
 
 ## Options

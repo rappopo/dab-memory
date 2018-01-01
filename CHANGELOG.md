@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+* Fix minor error & update README
+
 ## 0.1.1
 
 * Update README
