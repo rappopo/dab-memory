@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0
+
+* Updated to @rappopo/dab@0.1.0 and enforce new specs
+
 ## 0.0.11
 
 * Updated to @rappopo/dab@0.0.12
