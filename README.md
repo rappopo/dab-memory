@@ -14,31 +14,33 @@ And within your script:
 
 ```javascript
 const DabMemory = require('@rappopo/dab-memory')
-const dab = new DabMemory({
-  data: [
-    ....
-  ]
-})
+const dab = new DabMemory()
+// prepare collections
+dab.createCollection({ name: 'test' })
+  .then(result => {
+    return dab.bulkCreate(data, { collection: 'test' })
+  })
 ...
-dab.findOne('my-doc').then(function(doc) { ... })
+// lets dab!
+dab.findOne('my-doc', 'test').then(function(doc) { ... })
 ```
 
 ## Options
 
-`ns`: namespace to use. Optional, defaults to *default*.
+Currently, no options necessary.
 
-`data`: your in-memory data as array of objects, with **_id** as the primary key. Defaults to empty array. 
+## Features
 
-Example:
+Data is internally saved as collections as follows:
 
 ```javascript
-data: [
-  { _id: 'jack-bauer', name: 'Jack Bauer' },
-  { _id: 'james-bond', name: 'James Bond' }
+dab.data.<collection-name> = [
+  { _id: "key1", name: "name1", ... },
+  { _id: "key2", name: "name2", ... }
 ]
 ```
 
-## Features
+To enforce structured data throughout DAB and use features provided by collections, you need to `createCollection ()` with your custom fields as [explained here](https://docs/rappopo.com/dab/method/create-collection/)
 
 * [x] [find](https://docs.rappopo.com/dab/method/find/)
 * [x] [findOne](https://docs.rappopo.com/dab/method/find-one/)
@@ -50,6 +52,9 @@ data: [
 * [x] [bulkRemove](https://docs.rappopo.com/dab/method/bulk-remove/)
 * [x] [copyFrom](https://docs.rappopo.com/dab/method/copy-from/)
 * [x] [copyTo](https://docs.rappopo.com/dab/method/copy-to/)
+* [x] [createCollection](https://docs.rappopo.com/dab/method/create-collection/)
+* [x] [renameCollection](https://docs.rappopo.com/dab/method/rename-collection/)
+* [x] [removeCollection](https://docs.rappopo.com/dab/method/remove-collection/)
 
 ## Misc
 
