@@ -40,7 +40,7 @@ describe('copyFrom', function () {
         return cls.createCollection({ name: 'test1' })
       })
       .then(result => {
-        return cls.copyFrom(src, { collectionSrc: 'test', collectionDest: 'test1', withDetail: true })
+        return cls.copyFrom(src, { srcCollection: 'test', collection: 'test1', withDetail: true })
       })
       .then(result => {
         expect(result.success).to.be.true,
