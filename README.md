@@ -40,7 +40,7 @@ dab.data.<collection-name> = [
 ]
 ```
 
-To enforce structured data throughout DAB and use features provided by collections, you need to `createCollection ()` with your custom fields as [explained here](https://docs/rappopo.com/dab/method/create-collection/)
+To enforce structured data throughout DAB and use features provided by collections, you need to `createCollection ()` with your custom fields as [explained here](https://docs.rappopo.com/dab/method/create-collection/)
 
 * [x] [find](https://docs.rappopo.com/dab/method/find/)
 * [x] [findOne](https://docs.rappopo.com/dab/method/find-one/)
