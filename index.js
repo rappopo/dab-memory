@@ -49,19 +49,20 @@ class DabMemory extends Dab {
     [params] = this.sanitize(params)
     let limit = params.limit || this.options.limit,
       query = params.query || {},
-      skip = ((params.page || 1) - 1) * limit,
-      sort = params.sort || []
+      skip = ((params.page || 1) - 1) * limit
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
         return reject(new Error('Collection not found'))
       let result = this._.query(this.data[params.collection], query),
         keys = [], dirs = [], total = result.length
-      this._.each(sort, s => {
-        keys.push(this._.keys(s)[0])
-        dirs.push(this._.values(s)[0])
-      })
-      if (!(this._.isEmpty(keys) || this._.isEmpty(dirs)))
-        result = this._.orderBy(result, keys, dirs)
+      if (params.sort) {
+        this._.forOwn(params.sort, (v, k) => {
+          keys.push(k)
+          dirs.push(v === -1 ? 'desc' : 'asc')
+        })
+        if (!(this._.isEmpty(keys) || this._.isEmpty(dirs)))
+          result = this._.orderBy(result, keys, dirs)        
+      }
 
       result = this._(result).drop(skip).take(limit).value()
       let data = {
