@@ -52,7 +52,7 @@ class DabMemory extends Dab {
       skip = ((params.page || 1) - 1) * limit
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
-        return reject(new Error('Collection not found'))
+        throw new Error('Collection not found')
       let result = this._.query(this.data[params.collection], query),
         keys = [], dirs = [], total = result.length
       if (params.sort) {
@@ -61,7 +61,7 @@ class DabMemory extends Dab {
           dirs.push(v === -1 ? 'desc' : 'asc')
         })
         if (!(this._.isEmpty(keys) || this._.isEmpty(dirs)))
-          result = this._.orderBy(result, keys, dirs)        
+          result = this._.orderBy(result, keys, dirs)
       }
 
       result = this._(result).drop(skip).take(limit).value()
@@ -97,10 +97,9 @@ class DabMemory extends Dab {
     [params] = this.sanitize(params)
     return new Promise((resolve, reject) => {
       let result = this._findOne(id, params.collection)
-      if (!result.success) 
-        return reject(result.err)
+      if (!result.success) throw result.err
       result.data = this.convert(result.data, { collection: params.collection })
-      if (!params.withIndex) 
+      if (!params.withIndex)
         delete result.index
       resolve(result)
     })
@@ -110,13 +109,12 @@ class DabMemory extends Dab {
     [params, body] = this.sanitize(params, body)
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
-        return reject(new Error('Collection not found'))
+        throw new Error('Collection not found')
       const id = body._id || uuid()
       if (!body._id)
         body._id = id
       let result = this._findOne(id, params.collection)
-      if (result.success)
-        return reject(new Error('Document already exists'))
+      if (result.success) throw new Error('Document already exists')
       this.data[params.collection].push(body)
       let data = {
         success: true,
@@ -132,10 +130,10 @@ class DabMemory extends Dab {
     body = this._.omit(body, ['_id'])
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
-        return reject(new Error('Collection not found'))
+        throw new Error('Collection not found')
       let result = this._findOne(id, params.collection)
       if (!result.success)
-        return reject(result.err)
+        throw result.err
       let newBody = params.fullReplace ? this._.merge(body, { _id: id }) : this._.merge(result.data, body)
       this.data[params.collection][result.index] = newBody
       let data = {
@@ -152,10 +150,10 @@ class DabMemory extends Dab {
     [params] = this.sanitize(params)
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
-        return reject(new Error('Collection not found'))
+        throw new Error('Collection not found')
       let result = this._findOne(id, params.collection)
       if (!result.success)
-        return reject(result.err)
+        throw result.err
       let pulled = this._.pullAt(this.data[params.collection], [result.index]),
         data = params.withSource ? { success: true, source: this.convert(pulled[0], { collection: params.collection }) } : { success: true }
       if (params.withIndex)
@@ -179,16 +177,16 @@ class DabMemory extends Dab {
         stat.message = inverted ? 'Document already exists' : 'Document not found'
       status.push(stat)
     })
-    return [good, status]    
+    return [good, status]
   }
 
   bulkCreate (body, params) {
     [params, body] = this.sanitize(params, body)
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
-        return reject(new Error('Collection not found'))
+        throw new Error('Collection not found')
       if (!this._.isArray(body))
-        return reject(new Error('Requires an array'))
+        throw new Error('Requires an array')
       const [good, status] = this._getGood(body, true, params.collection),
         stuff = this._.map(good, g => g.data)
 
@@ -211,9 +209,9 @@ class DabMemory extends Dab {
     [params, body] = this.sanitize(params, body)
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
-        return reject(new Error('Collection not found'))
+        throw new Error('Collection not found')
       if (!this._.isArray(body))
-        return reject(new Error('Requires an array'))
+        throw new Error('Requires an array')
       const [good, status] = this._getGood(body, false, params.collection)
 
       this._.each(good, g => {
@@ -237,9 +235,9 @@ class DabMemory extends Dab {
     [params, body] = this.sanitize(params, body)
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
-        return reject(new Error('Collection not found'))
+        throw new Error('Collection not found')
       if (!this._.isArray(body))
-        return reject(new Error('Requires an array'))
+        throw new Error('Requires an array')
       this._.each(body, (b, i) => {
         body[i] = { _id: b }
       })

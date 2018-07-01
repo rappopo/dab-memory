@@ -1,7 +1,7 @@
 'use strict'
 
 const chai = require('chai'),
-  chaiSubset = require('chai-subset'),  
+  chaiSubset = require('chai-subset'),
   expect = chai.expect
 
 chai.use(chaiSubset)
@@ -49,6 +49,9 @@ describe('copyFrom', function () {
         expect(result.stat).to.have.property('total', 3)
         expect(cls.data).to.have.property('test1').that.containSubset(lib.docs)
         done()
+      })
+      .catch(err => {
+        console.log(err)
       })
   })
 
