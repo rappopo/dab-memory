@@ -27,7 +27,7 @@ describe('removeCollection', function () {
         return cls.removeCollection('test')
       })
       .then(result => {
-        expect(result).to.have.property('success', true)
+        expect(result).to.be.true
         expect(cls.data).to.not.have.property('test')
         done()
       })
