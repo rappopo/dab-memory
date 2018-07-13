@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.6.1
+## 0.6.2
+
+* Fix all methods using custom ID
+
+## 0.6.2
 
 * Updated to @rappopo/dab@0.6.1
 

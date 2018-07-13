@@ -80,7 +80,10 @@ class DabMemory extends Dab {
         success: false,
         err: new Error('Collection not found')
       }
-    let idx = this._.findIndex(this.data[collection], { _id: id }),
+    const key = this.collection[collection].srcAttribId
+    let q = {}
+    q[key] = id
+    let idx = this._.findIndex(this.data[collection], q),
       result = {
         success: idx > -1
       }
@@ -110,9 +113,10 @@ class DabMemory extends Dab {
     return new Promise((resolve, reject) => {
       if (!this._.has(this.data, params.collection))
         throw new Error('Collection not found')
-      const id = body._id || uuid()
-      if (!body._id)
-        body._id = id
+      const key = this.collection[params.collection].srcAttribId
+      const id = body[key] || uuid()
+      if (!body[key])
+        body[key] = id
       let result = this._findOne(id, params.collection)
       if (result.success) throw new Error('Document already exists')
       this.data[params.collection].push(body)
@@ -134,7 +138,10 @@ class DabMemory extends Dab {
       let result = this._findOne(id, params.collection)
       if (!result.success)
         throw result.err
-      let newBody = params.fullReplace ? this._.merge(body, { _id: id }) : this._.merge(result.data, body)
+      const key = this.collection[params.collection].srcAttribId
+      let q = {}
+      q[key] = id
+      let newBody = params.fullReplace ? this._.merge(body, q) : this._.merge(result.data, body)
       this.data[params.collection][result.index] = newBody
       let data = {
         success: true,
@@ -164,11 +171,13 @@ class DabMemory extends Dab {
 
   _getGood (body, inverted = false, collection) {
     let good = [], status = []
+    const key = this.collection[collection].srcAttribId
     this._.each(body, (b,i) => {
-      if (!this._.has(b, '_id'))
-        b._id = uuid()
-      let stat = { _id: b._id }
-      const idx = this._.findIndex(this.data[collection], { _id: b._id }),
+      if (!this._.has(b, key))
+        b[key] = uuid()
+      let stat = {}
+      stat[key] = b[key]
+      const idx = this._.findIndex(this.data[collection], stat),
         op = (inverted && idx === -1) || (!inverted && idx > -1)
       if (op)
         good.push({ idx: idx, data: b })
@@ -238,8 +247,11 @@ class DabMemory extends Dab {
         throw new Error('Collection not found')
       if (!this._.isArray(body))
         throw new Error('Requires an array')
+      const key = this.collection[params.collection].srcAttribId
       this._.each(body, (b, i) => {
-        body[i] = { _id: b }
+        let d = {}
+        d[key] = b
+        body[i] = d
       })
 
       const [good, status] = this._getGood(body, false, params.collection)
