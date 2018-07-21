@@ -81,7 +81,7 @@ describe('remove', function () {
         expect(result.success).to.be.true
         expect(result.source).to.have.property('_id', 'jack-bauer')
         expect(result.source).to.have.property('name', 'Jack Bauer')
-        expect(result.source).to.have.property('age', null)
+        expect(result.source).to.have.property('age', 35)
         done()
       })
   })
@@ -99,7 +99,7 @@ describe('remove', function () {
         expect(result.success).to.be.true
         expect(result.source).to.have.property('_id', 'jack-bauer')
         expect(result.source).to.not.have.property('name')
-        expect(result.source).to.have.property('age', null)
+        expect(result.source).to.have.property('age', 35)
         done()
       })
   })
@@ -117,7 +117,7 @@ describe('remove', function () {
         expect(result.success).to.be.true
         expect(result.source).to.have.property('id', 'jack-bauer')
         expect(result.source).to.have.property('fullname', 'Jack Bauer')
-        expect(result.source).to.have.property('age', null)
+        expect(result.source).to.have.property('age', 35)
         done()
       })
   })

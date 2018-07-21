@@ -118,7 +118,7 @@ describe('find', function () {
       .then(result => {
         expect(result.success).to.be.true
         expect(result.total).to.equal(3)
-        expect(result.data[0]).to.eql({ _id: 'jack-bauer', name: 'Jack Bauer', age: null })
+        expect(result.data[0]).to.eql({ _id: 'jack-bauer', name: 'Jack Bauer', age: 35 })
         expect(result.data[1]).to.eql({ _id: 'johnny-english', name: 'Johnny English', age: null })
         expect(result.data[2]).to.include({ name: 'Jane Boo', age: 20 })
         done()
@@ -137,7 +137,7 @@ describe('find', function () {
       .then(result => {
         expect(result.success).to.be.true
         expect(result.total).to.equal(3)
-        expect(result.data[0]).to.eql({ _id: 'jack-bauer', age: null })
+        expect(result.data[0]).to.eql({ _id: 'jack-bauer', age: 35 })
         expect(result.data[1]).to.eql({ _id: 'johnny-english', age: null })
         expect(result.data[2]).to.include({ age: 20 })
         done()
@@ -156,7 +156,7 @@ describe('find', function () {
       .then(result => {
         expect(result.success).to.be.true
         expect(result.total).to.equal(3)
-        expect(result.data[0]).to.eql({ id: 'jack-bauer', fullname: 'Jack Bauer', age: null })
+        expect(result.data[0]).to.eql({ id: 'jack-bauer', fullname: 'Jack Bauer', age: 35 })
         expect(result.data[1]).to.eql({ id: 'johnny-english', fullname: 'Johnny English', age: null })
         expect(result.data[2]).to.include({ fullname: 'Jane Boo', age: 20 })
         done()

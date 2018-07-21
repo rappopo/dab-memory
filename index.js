@@ -1,7 +1,6 @@
 'use strict'
 
-const uuid = require('uuid/v4'),
-  Dab = require('@rappopo/dab').Dab,
+const Dab = require('@rappopo/dab').Dab,
   Collection = require('@rappopo/dab').Collection
 
 class DabMemory extends Dab {
@@ -114,7 +113,7 @@ class DabMemory extends Dab {
       if (!this._.has(this.data, params.collection))
         throw new Error('Collection not found')
       const key = this.collection[params.collection].srcAttribId
-      const id = body[key] || uuid()
+      const id = body[key] || this.nanoid()
       if (!body[key])
         body[key] = id
       let result = this._findOne(id, params.collection)
@@ -139,9 +138,16 @@ class DabMemory extends Dab {
       if (!result.success)
         throw result.err
       const key = this.collection[params.collection].srcAttribId
-      let q = {}
-      q[key] = id
-      let newBody = params.fullReplace ? this._.merge(body, q) : this._.merge(result.data, body)
+      let newBody = {}
+      if (params.fullReplace) {
+        this._.each(params.fullReplaceExclude || [], f => {
+          newBody[f] = result.data[f]
+        })
+        newBody = this._.merge(body, newBody)
+        newBody[key] = id
+      } else {
+        newBody = this._.merge(result.data, body)
+      }
       this.data[params.collection][result.index] = newBody
       let data = {
         success: true,
@@ -174,7 +180,7 @@ class DabMemory extends Dab {
     const key = this.collection[collection].srcAttribId
     this._.each(body, (b,i) => {
       if (!this._.has(b, key))
-        b[key] = uuid()
+        b[key] = this.nanoid()
       let stat = {}
       stat[key] = b[key]
       const idx = this._.findIndex(this.data[collection], stat),

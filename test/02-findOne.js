@@ -85,7 +85,7 @@ describe('findOne', function (done) {
         expect(result.success).to.be.true
         expect(result.data).to.have.property('_id', 'jack-bauer')
         expect(result.data).to.have.property('name', 'Jack Bauer')
-        expect(result.data).to.have.property('age', null)
+        expect(result.data).to.have.property('age', 35)
         done()
       })
   })
@@ -103,7 +103,7 @@ describe('findOne', function (done) {
         expect(result.success).to.be.true
         expect(result.data).to.have.property('_id', 'jack-bauer')
         expect(result.data).to.not.have.property('name')
-        expect(result.data).to.have.property('age', null)
+        expect(result.data).to.have.property('age', 35)
         done()
       })
   })
@@ -121,7 +121,7 @@ describe('findOne', function (done) {
         expect(result.success).to.be.true
         expect(result.data).to.have.property('id', 'jack-bauer')
         expect(result.data).to.have.property('fullname', 'Jack Bauer')
-        expect(result.data).to.have.property('age', null)
+        expect(result.data).to.have.property('age', 35)
         done()
       })
   })

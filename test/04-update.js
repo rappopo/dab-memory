@@ -96,6 +96,26 @@ describe('update', function () {
       })
   })
 
+  it('should return fully updated value with some columns excluded', function (done) {
+    const cls = new Cls(lib.options)
+    cls.createCollection(lib.schema)
+      .then(result => {
+        return cls.bulkCreate(lib.docs, { collection: 'test' })
+      })
+      .then(result => {
+        return cls.update('jack-bauer', altBody, { collection: 'test', fullReplace: true, fullReplaceExclude: ['age'] })
+      })
+      .then(result => {
+        expect(result.success).to.be.true
+        expect(result.data).to.have.property('gender', 'M')
+        expect(result.data).to.have.property('age', 35)
+        expect(result.data).to.not.have.property('name')
+        done()
+      })
+  })
+
+
+
   it('should return enforced values according to its definitions', function (done) {
     const cls = new Cls(lib.options)
     cls.createCollection(lib.schemaFull)

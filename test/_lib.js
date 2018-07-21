@@ -33,12 +33,12 @@ module.exports = {
     }
   },
   docs: [
-    { _id: 'jack-bauer', name: 'Jack Bauer' },
+    { _id: 'jack-bauer', name: 'Jack Bauer', age: 35 },
     { _id: 'johnny-english', name: 'Johnny English' },
     { name: 'Jane Boo', age: 20 }
   ],
   docsMask: [
-    { id: 'jack-bauer', fullname: 'Jack Bauer' },
+    { id: 'jack-bauer', fullname: 'Jack Bauer', age: 35 },
     { id: 'johnny-english', fullname: 'Johnny English' },
     { fullname: 'Jane Boo', age: 20 }
   ],

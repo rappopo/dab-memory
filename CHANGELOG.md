@@ -2,9 +2,12 @@
 
 ## 0.6.2
 
+* Updated to @rappopo/dab@0.6.2
 * Fix all methods using custom ID
+* Replace uuid with nanoid for ID auto generator
+* Add params.fullReplaceExclude to exclude fields on a full replace update
 
-## 0.6.2
+## 0.6.1
 
 * Updated to @rappopo/dab@0.6.1
 
