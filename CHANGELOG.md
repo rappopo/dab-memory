@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.5
+
+* Updated to @rappopo/dab@0.6.8
+
 ## 0.6.4
 
 * Updated to @rappopo/dab@0.6.7
