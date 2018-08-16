@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.6
+
+* Updated to @rappopo/dab@0.6.9
+* Standard JS compliance
+* fix on _findOne
+
 ## 0.6.5
 
 * Updated to @rappopo/dab@0.6.8

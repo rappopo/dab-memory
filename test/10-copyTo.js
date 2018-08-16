@@ -1,18 +1,18 @@
 'use strict'
 
-const chai = require('chai'),
-  chaiSubset = require('chai-subset'),  
-  expect = chai.expect
+const chai = require('chai')
+const chaiSubset = require('chai-subset')
+const expect = chai.expect
 
 chai.use(chaiSubset)
 
-const Cls = require('../index'),
-  lib = require('./_lib')
+const Cls = require('../index')
+const lib = require('./_lib')
 
 describe('copyTo', function () {
   it('should return error if collection doesn\'t exist', function (done) {
-    const cls = new Cls(lib.options),
-      dest = new Cls(lib.options)
+    const cls = new Cls(lib.options)
+    const dest = new Cls(lib.options)
     cls.createCollection(lib.schema)
       .then(result => {
         return cls.bulkCreate(lib.docs, { collection: 'test' })
@@ -30,8 +30,8 @@ describe('copyTo', function () {
   })
 
   it('should return all values correctly', function (done) {
-    const cls = new Cls(lib.options),
-      dest = new Cls(lib.options)
+    const cls = new Cls(lib.options)
+    const dest = new Cls(lib.options)
     cls.createCollection(lib.schema)
       .then(result => {
         return cls.bulkCreate(lib.docs, { collection: 'test' })
@@ -43,7 +43,7 @@ describe('copyTo', function () {
         return cls.copyTo(dest, { collection: 'test', destCollection: 'test1', withDetail: true })
       })
       .then(result => {
-        expect(result.success).to.be.true,
+        expect(result.success).to.equal(true)
         expect(result.stat).to.have.property('ok', 3)
         expect(result.stat).to.have.property('fail', 0)
         expect(result.stat).to.have.property('total', 3)
@@ -62,7 +62,7 @@ describe('copyTo', function () {
         return cls.copyTo('/tmp/dab-copy-to.json', { collection: 'test', withDetail: true })
       })
       .then(result => {
-        expect(result.success).to.be.true,
+        expect(result.success).to.equal(true)
         expect(result.stat).to.have.property('ok', 5)
         expect(result.stat).to.have.property('fail', 0)
         expect(result.stat).to.have.property('total', 5)
@@ -80,7 +80,7 @@ describe('copyTo', function () {
         return cls.copyTo('/tmp/dab-copy-to.json', { collection: 'mask', withDetail: true })
       })
       .then(result => {
-        expect(result.success).to.be.true,
+        expect(result.success).to.equal(true)
         expect(result.stat).to.have.property('ok', 5)
         expect(result.stat).to.have.property('fail', 0)
         expect(result.stat).to.have.property('total', 5)
@@ -90,7 +90,4 @@ describe('copyTo', function () {
         done()
       })
   })
-
-
-
 })

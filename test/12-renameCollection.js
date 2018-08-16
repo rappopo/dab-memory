@@ -1,13 +1,13 @@
 'use strict'
 
-const chai = require('chai'),
-  chaiAsPromised = require("chai-as-promised"),
-  expect = chai.expect
+const chai = require('chai')
+const chaiAsPromised = require('chai-as-promised')
+const expect = chai.expect
 
 chai.use(chaiAsPromised)
 
-const Cls = require('../index'),
-  lib = require('./_lib')
+const Cls = require('../index')
+const lib = require('./_lib')
 
 describe('renameCollection', function () {
   it('should return error if no collection provided', function () {
@@ -17,7 +17,7 @@ describe('renameCollection', function () {
 
   it('should return error if collection doesn\'t exist', function () {
     const cls = new Cls(lib.options)
-    return expect(cls.renameCollection('test', 'default' )).to.be.rejectedWith('Collection not found')
+    return expect(cls.renameCollection('test', 'default')).to.be.rejectedWith('Collection not found')
   })
 
   it('should return error if new collection exists', function (done) {
@@ -42,7 +42,7 @@ describe('renameCollection', function () {
         return cls.renameCollection('test', 'default')
       })
       .then(result => {
-        expect(result).to.be.true
+        expect(result).to.equal(true)
         expect(cls.data).to.not.have.property('test')
         expect(cls.data).to.have.property('default').that.is.a('array').with.length(3)
         done()

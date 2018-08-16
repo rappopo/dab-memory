@@ -1,10 +1,10 @@
 'use strict'
 
-const chai = require('chai'),
-  expect = chai.expect
+const chai = require('chai')
+const expect = chai.expect
 
-const Cls = require('../index'),
-  lib = require('./_lib')
+const Cls = require('../index')
+const lib = require('./_lib')
 
 describe('findOne', function (done) {
   it('should return error if collection doesn\'t exist', function (done) {
@@ -47,7 +47,7 @@ describe('findOne', function (done) {
         return cls.findOne('jack-bauer', { collection: 'test' })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('_id', 'jack-bauer')
         expect(result.data).to.have.property('name', 'Jack Bauer')
         done()
@@ -64,7 +64,7 @@ describe('findOne', function (done) {
         return cls.findOne('jack-bauer', { collection: 'test', withIndex: true })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('_id', 'jack-bauer')
         expect(result.data).to.have.property('name', 'Jack Bauer')
         expect(result.index).to.equal(0)
@@ -82,7 +82,7 @@ describe('findOne', function (done) {
         return cls.findOne('jack-bauer', { collection: 'full' })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('_id', 'jack-bauer')
         expect(result.data).to.have.property('name', 'Jack Bauer')
         expect(result.data).to.have.property('age', 35)
@@ -100,7 +100,7 @@ describe('findOne', function (done) {
         return cls.findOne('jack-bauer', { collection: 'hidden' })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('_id', 'jack-bauer')
         expect(result.data).to.not.have.property('name')
         expect(result.data).to.have.property('age', 35)
@@ -118,14 +118,11 @@ describe('findOne', function (done) {
         return cls.findOne('jack-bauer', { collection: 'mask' })
       })
       .then(result => {
-        expect(result.success).to.be.true
+        expect(result.success).to.equal(true)
         expect(result.data).to.have.property('id', 'jack-bauer')
         expect(result.data).to.have.property('fullname', 'Jack Bauer')
         expect(result.data).to.have.property('age', 35)
         done()
       })
   })
-
-
-
 })

@@ -1,6 +1,6 @@
 {
   "name": "@rappopo/dab-memory",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "An in-memory data access layer that sucks!",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "url": "git+https://github.com/rappopo/dab-memory.git"
   },
   "dependencies": {
-    "@rappopo/dab": "^0.6.8",
+    "@rappopo/dab": "^0.6.9",
     "lodash-query": "^1.4.2"
   },
   "devDependencies": {
